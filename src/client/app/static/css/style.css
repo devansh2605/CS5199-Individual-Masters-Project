@@ -1,0 +1,47 @@
+@font-face {
+    font-family: 'Comfortaa Regular';
+    src: url('../fonts/NotoSans-Regular.ttf'),
+         url('../fonts/NotoSans-Bold.ttf'),
+         url('../fonts/NotoSans-Italic.ttf'),
+         url('../fonts/NotoSans-BoldItalic.ttf')
+}
+
+body {
+    background-color: #0f0f0f;
+    margin: 0;
+    min-width: 1000px;
+    font-family: 'Noto Sans', sans-serif;
+    color: #e2e8f0;
+}
+
+/* For react-notification-system */
+.notification-message {
+    color: black;
+}
+
+#left-game-top-clock, #left-game-bottom-clock,
+#right-game-top-clock, #right-game-bottom-clock {
+    min-width: 80px;
+}
+
+/* Modal helper */
+.centerDiv {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* flash animation for resign/draw choice buttons */
+.flash-button {
+    animation: flashButton 1s ease infinite;
+}
+
+@keyframes flashButton {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+
+/* Anchor colour reset for Tailwind context */
+a { color: inherit; text-decoration: none; }
+a:hover { text-decoration: none; }

@@ -1,0 +1,7 @@
+node_modules
+.idea
+*.iml
+/src/client/public/*
+.env.local
+*.log
+.DS_Store
