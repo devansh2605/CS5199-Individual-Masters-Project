@@ -20,14 +20,15 @@ const server = http.createServer(app);
 
 const io = require('socket.io')(server, {
 	cors: {
-		origin: function(origin, callback) {
-			callback(null, config.isAllowedOrigin(origin));
-		},
-		methods: ['GET', 'POST'],
+		origin: config.isAllowedOrigin,
+		methods: ['GET', 'POST', 'OPTIONS'],
 		credentials: true,
 		allowEIO3: true,
 	},
+	maxHttpBufferSize: 1e6,
 });
+
+io.setMaxListeners(100);
 require('./services/socket')(io);
 
 function onError(error) {

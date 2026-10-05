@@ -44,14 +44,23 @@ router.post('/guest', async (req, res) => {
 			return res.status(409).json({ error: 'Username already taken' });
 		}
 
-		// create guest profile
+		// create guest profile with random UUID
+		const crypto = require('crypto');
+		const guestId = crypto.randomUUID();
 		const profile = await ProfileModel.create({
+			id: guestId,
 			username,
-			email: `guest_${Date.now()}@chess.local`,
+			email: `guest_${guestId}@chess.local`,
 			is_guest: true,
 		});
 
-		res.json({ success: true, profile });
+		// return a guest token (just the user ID, client will use for socket.io)
+		res.json({
+			success: true,
+			user: profile,
+			token: guestId,
+			is_guest: true
+		});
 	} catch (error) {
 		res.status(500).json({ error: 'Failed to create guest account', details: error.message });
 	}
