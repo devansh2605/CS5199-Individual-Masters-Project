@@ -20,9 +20,12 @@ const server = http.createServer(app);
 
 const io = require('socket.io')(server, {
 	cors: {
-		origin: config.corsOrigin,
+		origin: function(origin, callback) {
+			callback(null, config.isAllowedOrigin(origin));
+		},
 		methods: ['GET', 'POST'],
 		credentials: true,
+		allowEIO3: true,
 	},
 });
 require('./services/socket')(io);

@@ -53,6 +53,24 @@ class ProfileModel {
 		if (error) throw new Error(error.message);
 		return data || [];
 	}
+
+	// create a new profile
+	static async create(profileData) {
+		const { data, error } = await supabase
+			.from('profiles')
+			.insert([{
+				id: profileData.id,
+				username: profileData.username,
+				email: profileData.email,
+				is_guest: profileData.is_guest || false,
+				rating: 1500,
+				games_played: 0,
+			}])
+			.select()
+			.single();
+		if (error) throw new Error(error.message);
+		return data;
+	}
 }
 
 module.exports = ProfileModel;

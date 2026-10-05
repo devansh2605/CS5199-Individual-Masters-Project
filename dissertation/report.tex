@@ -68,7 +68,7 @@ for it to be made available for use in accordance with the regulations of the Un
 \section*{Acknowledgements}
 \addcontentsline{toc}{section}{Acknowledgements}
 
-Firstly, I would like to thank Professor Richard Connor for his constant support and guidance throughout the semester. I have really enjoyed our weekly meetings throughout the semester where I could to ask for help, discuss my progress and get back on track should I have gone off course. 
+Firstly, I would like to thank Professor Richard Connor for his constant support and guidance throughout the semester. I have really enjoyed our weekly meetings throughout the semester where I could ask for help, discuss my progress and get back on track should I have gone off course. 
 
 I would also like to thank my parents (Dr. Nitin Chopra and Mrs. Radhika Chopra) and brother (Mr. Pranav Chopra) as well as all my family and friends for their support and encouragement throughout the project. 
 
@@ -136,7 +136,7 @@ The comic itself is called an armada which means a fleet of pieces. And based on
 
 \subsection*{1.4 Contributions}
 \addcontentsline{toc}{subsection}{1.4 Contributions}
-Five things, in order of weight.
+Four things, in order of weight, plus other features.
 
 \begin{enumerate}[leftmargin=*]
 \item I added a bughouse rules on top of the \texttt{chess.js}~[10]. \texttt{Bug.js} enforces these rules on the server. 
@@ -165,19 +165,19 @@ Infinite Armada is somewhere between Bughouse and Crazyhouse~[15, 16, 17, 18]. I
 
 \subsection*{2.2 The legality of drops}
 \addcontentsline{toc}{subsection}{2.2 The legality of drops}
-To full proof this variant I implemented the following rules
+To fully prove this variant I implemented the following rules
 
 \begin{itemize}[leftmargin=*]
 \item No pawn drop on the 1st or 8th rank. Since a pawn there would imply free promotion or illegal respectively.
-\item No drop to directly mate. This is the most important rule. Mate on drop is too would remove most of the skill from the game.
-\item No drop for immediate promotion in the same move(Paired with the rank rule)
+\item No drop to directly mate. This is the most important rule. Mate on drop would remove most of the skill from the game.
+\item No drop for immediate promotion in the same move (paired with the rank rule)
 \item No drop on the opponent's first rank. This would allow unfair advantage to mate quickly.
 \end{itemize}
 Standard chess rules I follow are from the FIDE Laws of Chess (2023)~[3]. The bughouse conventions come from the ICC~[6] and Lichess~[18] help pages, and my rule set is slightly stricter than Lichess.
 
 \subsection*{2.3 Engines, UCI and why drops are hard}
 \addcontentsline{toc}{subsection}{2.3 Engines, UCI, and why drops are hard}
-Stockfish is the strongest open source chess engine~[4]. It speaks UCI, the Universal Chess Interface~[11] over stdin and stdout. Therefore, Stockfish does not understand drops normally, which was a big challenge. UCI has no syntax for 'drop a knight on f3'. You can ask Stockfish for the best standard move, but the moment you want the engine to choose between a move and a drop the evalutation heuristic falls drastically.
+Stockfish is the strongest open source chess engine~[4]. It speaks UCI, the Universal Chess Interface~[11] over stdin and stdout. Therefore, Stockfish does not understand drops normally, which was a big challenge. UCI has no syntax for 'drop a knight on f3'. You can ask Stockfish for the best standard move, but the moment you want the engine to choose between a move and a drop the evaluation heuristic falls drastically.
 
 There is no bughouse engine of any wide use that I can use in place of a normal engine. The older Sjeng engine~[22] is no longer maintained and therefore could not be used. Lc0 (Leela Chess Zero)~[21], the neural net chess engine does not have bughouse weights trained because no one has trained a model of that size for such a special variant. Therefore, I had to use Stockfish for the move side of bughouse and write a drop side engine myself for the times that I need to make a drop instead of a move, which still needs improvement.
 
@@ -189,7 +189,7 @@ Elo is a rating system used in chess and other games~[13]. It updates the rating
 
 \subsection*{2.5 The upstream fork}
 \addcontentsline{toc}{subsection}{2.5 The upstream fork}
-After approving from my supervisor, I used John DiIorio's open-source \texttt{bughouse} repository~[2] as the starting point. I consisted of a basic frontend, two board Chessground rendering, a Socket.IO setup with \texttt{/lobby} and \texttt{/game} and a chess.js that already handled the reserve data structure and the drop notation. I expanded it with a rule enforcement, Stockfish engine integration, rating system, N board notion, connected supabase and the Phase 2 implementation.
+After approval from my supervisor, I used John DiIorio's open-source \texttt{bughouse} repository~[2] as the starting point. It consisted of a basic frontend, two board Chessground rendering, a Socket.IO setup with \texttt{/lobby} and \texttt{/game} and a chess.js that already handled the reserve data structure and the drop notation. I expanded it with a rule enforcement, Stockfish engine integration, rating system, N board notion, connected supabase and the Phase 2 implementation.
 
 \subsection*{2.6 The rest of the stack}
 \addcontentsline{toc}{subsection}{2.6 The rest of the stack}
@@ -218,7 +218,7 @@ This requirement was split into Phase 1, Phase 2 and shared requirements. All re
 \item \textit{FR7 (M)} Glicko2 ratings calculator and a team Elo update for 2vs2 games.
 \item \textit{FR8 (M)} N board (infinite mode) for $N \in \{2, 4, 6, 8, 10\}$ boards with one human on board 0 and rest engines.
 \item \textit{FR9 (M)} Transfers of captured pieces in Phase 2 bughouse from one board N to the other board N + 1 real time. All captures made on a board which has already ended are routed to the next active board.
-\item \textit{FR10 (M)} Each engine on a Phase 2 board is set to play at a rating of a chosen Elo (800—2500) in matches against other engines. Think time for each engine on a board is set using the pacing formula in Section6.7 for the amount of time there is remaining on the board for that player.
+\item \textit{FR10 (M)} Each engine on a Phase 2 board is set to play at a rating of a chosen Elo (800—2500) in matches against other engines. Think time for each engine on a board is set using the pacing formula in Section 3.4 for the amount of time there is remaining on the board for that player.
 \item \textit{FR11 (M)} The human can ask for a piece from any of the teammate boards pocket in Phase 2. The system will show the human a ranked list of (board, piece) recommendations to request a piece from a teammate and the eval cost of giving up that piece.
 \item \textit{FR12 (M)} Team boards in Phase 2 show an eval bar, which updates on every engine move so the human can see what is the status of the rest of his team.
 \item \textit{FR13 (M)} The decision whether to drop a piece in a given situation is made by a pipeline consisting of a search for a mate in 1 move by the engine on the human player’s board, followed by a heuristic prune search for candidate moves by the human player on all boards, followed by an Elo scaled bias in favor of a drop for the human player on all boards, followed by a Stockfish evaluated comparison of the best standard move and the best drop move by the human player on all boards.
@@ -275,9 +275,9 @@ This project was developed over a span of 11 weeks, with each having a weekly ch
 
 I split this project into two phases. Phase 1 focused on building and validating the rule system by testing and manual playtests before moving onto Phase 2, which extended the system into the infinite N board topology. Each phase was manually tested before moving forward. The original DOERs proposal was modified over the course of this work. The largest change from the original plan was that instead of writing a full evaluation engine from scratch, the Stockfish chess engine was used and a drop decision pipeline was added on top.
 
-Additionally for testing I have used test-driven development (TDD) for the rule system in \texttt{FordropRules.js} as well as the team Elo system in \texttt{elo.js}, while the rest of the system I have tested in an iteratively. There is a test suite of 150 tests in 5 files, which can be run with \texttt{npm test}.
+Additionally for testing I have used test-driven development (TDD) for the rule system in \texttt{dropRules.js} as well as the team Elo system in \texttt{elo.js}, while the rest of the system I have tested in an iteratively. There is a test suite of 150 tests in 5 files, which can be run with \texttt{npm test}.
 
-VS Code was used for editing, ESLint (set to the same configuration as the upstream project) was used for style checking and a single \texttt{run.sh} script was written to set up a development environment (installs  Node 20, Stockfish and Python dependencies for the other part of the project,and then starts up the local server).
+VS Code was used for editing, ESLint (set to the same configuration as the upstream project) was used for style checking and a single \texttt{run.sh} script was written to set up a development environment (installs  Node 20, Stockfish and Python dependencies for the other part of the project, and then starts up the local server).
 \newpage
 \section*{5. System architecture}
 \addcontentsline{toc}{section}{5. System architecture}
@@ -287,7 +287,7 @@ The architecture is a 3 layer stack. On the client side a browser loads a single
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{system_topology.png}
-    \caption{Enter Caption}
+    \caption{System topology - three-layer stack}
 \end{figure}
 
 \subsection*{5.2 Frontend}
@@ -297,7 +297,7 @@ The application uses React 15 with Redux 3 and react-router. The client has 5 ma
     \item \texttt{AuthPage.jsx} which is for logging in and out of the server
     \item \texttt{LobbyPage.jsx} joining games using room code
     \item \texttt{LobbyWaitingRoom.jsx} for configuring the lobby and multiplayer games
-    \item \texttt{InfiniteSetupPage.jsx} for setting up games upto N=10
+    \item \texttt{InfiniteSetupPage.jsx} for setting up games up to N=10
     \item \texttt{InfiniteGamePage.jsx} for the Phase 2 Infinite Armada gameplay.
 \end{enumerate}
 
@@ -319,13 +319,6 @@ I used Supabase for both authentication and the Postgres database, with row-leve
 
 The \texttt{games} table uses JSONB fields, \texttt{engine\_slots} and \texttt{engine\_levels}, to support human and engine player setups. The \texttt{rating\_history} table stores per game rating updates with indexed queries for leaderboard access. Authentication uses Supabase JWT tokens. The token is stored in \texttt{localStorage} by the client and is included in Socket.IO events, and the server verifies it before processing requests.
 
-\begin{center}
-\fbox{\begin{minipage}{0.85\textwidth}\centering
-\textit{[Figure 4.4 to be inserted]}
-\par\vspace{0.4em}
-Version-stamped event flow. Client A makes a move; the server bumps version 41 to 42; both clients apply. Client B drops; the server bumps 42 to 43 to 44 in the meantime. Client B reconnects; the server sends full state v44 and B is back in sync.
-\end{minipage}}
-\end{center}
 \newpage
 \section*{6. Implementation}
 \addcontentsline{toc}{section}{6. Implementation}
@@ -335,7 +328,7 @@ For Phase 1 of this project I developed a 2 vs 2 bughouse variant with two playe
 
  The state model is implemented in \texttt{Game.js}. It extends DiIorio’s repo of the state model for bughouse chess to support multiple engine slots and to properly keep track of the rating of all four players. A Game object contains 4 player IDs (one for each slot), 4 clocks (only ticking on the turn of the player whose board the clock is for), 2 FENs (Forsyth-Edwards Notation) chess notation for the 2 boards, 2 reserve arrays per color per board, 1 list of promoted pieces per board, and team-level draw and resignation status. The team relationship is decided by the position of the slots i.e slots 0 and 3 form a team (white on board A and black on board B), and slots 1 and 2 form the other team. Thus the partner of slot 0 is slot 3, and captures by slot 0 go to the pocket of slot 3 on the other board.
 
-The slot of a player is assigned in the lobby. The \texttt{LobbyPage.jsx} shows all open slots (for both users and engines) when a new game is created along with a room code. The \texttt{LobbyWaitingRoom.jsx} tile is assigned to a human player (profile name). The other three are assigned to is the waiting room for the other players or engine before the game starts. The Elo of an engine can be chosen between Beginner and Grand Master. A room owner can switch the slot of another player, kick an engine from a slot or take the slot of an a human player and so on. A game is ready to start when all four slots are filled. The slot configuration is stored in two JSONB columns, first  \texttt{engine\_slots} which consists of the slots which are engines and second \texttt{engine\_levels} which is the Elo for each engine. The slot configuration of a game is always read together with the rest of the game and is never queried in isolation. Therefore I chose JSONB instead of a separate table \texttt{game\_slots}
+The slot of a player is assigned in the lobby. The \texttt{LobbyPage.jsx} shows all open slots (for both users and engines) when a new game is created along with a room code. The \texttt{LobbyWaitingRoom.jsx} tile is assigned to a human player (profile name). The other three are assigned to is the waiting room for the other players or engine before the game starts. The Elo of an engine can be chosen between Beginner and Grand Master. A room owner can switch the slot of another player, kick an engine from a slot or take the slot of an a human player and so on. A game is ready to start when all four slots are filled. The slot configuration is stored in two JSONB columns, first  \texttt{engine\_slots} which consists of the slots which are engines and second \texttt{engine\_levels} which is the Elo for each engine. The slot configuration of a game is always read together with the rest of the game and is never queried in isolation. Therefore I chose JSONB instead of a separate table \texttt{game\_slots}.
 
 \begin{figure}[H]
     \centering
@@ -345,6 +338,12 @@ The slot of a player is assigned in the lobby. The \texttt{LobbyPage.jsx} shows 
 
 The Phase 1 implementation for engines is in \texttt{engineManager.js}. It differs from the  Phase 2 in terms of the unidirectional loop and partner position awareness. The function \texttt{computePartnerNeed} computes how much a certain captured piece would help the partner. For example the engine will be biased to capture a knight if your partners opponent has just castled and a fork is possible using the knight. The two constants \texttt{LAMBDA = 0.3} and \texttt{MU = 0.25} are used to weight the partner-needs and threat from opponent. These two constants were hand tuned after playing multiple games at the interim demo stage, so they are not perfect and can be improved using a ML model, but they make the Phase 1 engine play like a good bughouse partner.
 
+\begin{figure} [H]
+        \centering
+        \includegraphics[width=0.75\linewidth]{phase-1-piece-flow.png}
+        \caption{Phase 1 - Piece transfer}
+    \end{figure}
+    
 \subsection*{6.2 Rules Applied}
 \addcontentsline{toc}{subsection}{6.2 Rules Applied}
 The rule layer is in \texttt{bug.js} and \texttt{updateGame.js} which accepts the move on behalf of the server for all game play, and checks four different rules for each drop, all server-side. 
@@ -379,13 +378,6 @@ Boards that have finished (by checkmate or flag) are considered dead boards, but
     \caption{N-board ring flow}
 \end{figure}
 
-\begin{center}
-\fbox{\begin{minipage}{0.85\textwidth}\centering
-\textit{[Figure 5.1 to be inserted]}
-\par\vspace{0.4em}
-The N-board ring at N=4. Four board boxes; one-way arrows from 0 to 1 to 2 to 3 to 0. Human icon on board 0, engine icons on 1, 2 and 3.
-\end{minipage}}
-\end{center}
 \subsection*{6.5 Engine integration}
 \addcontentsline{toc}{subsection}{6.5 Engine integration}
 \texttt{\texttt{StockfishEngine}} in \texttt{stockfishEngine.js} is a simple wrapper around \texttt{spawn('stockfish')} for the normal UCI~[4, 11] messages \texttt{uci}, \texttt{uciok}, \texttt{setoption}, \texttt{isready}, \texttt{readyok}. Engine strength is determined by \texttt{UCI\_LimitStrength} and \texttt{UCI\_Elo} for Elo greater than 1320. For lower Elo ratings, \texttt{UCI\_LimitStrength} is disabled and Elo is mapped roughly to Skill Level, using \texttt{Math.floor((elo * 20) / 1319)}.
@@ -409,13 +401,11 @@ I came up with the drop pipeline structure based on my personal experience of fi
 
 \end{enumerate}
 
-\begin{center}
-\fbox{\begin{minipage}{0.85\textwidth}\centering
-\textit{[Figure 5.3 to be inserted]}
-\par\vspace{0.4em}
-Drop-decision pipeline. Five boxes: legal candidates -> mate-in-one search -> heuristic prune -> Stockfish move plus drop comparison -> pick-or-fallback. Side branches for the Elo-bias and random-fallback exits.
-\end{minipage}}
-\end{center}
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{drop-decision.png}
+    \caption{Drop Decision Pipeline}
+\end{figure}
 
 \subsection*{6.7 Real time sync}
 \addcontentsline{toc}{subsection}{6.7 Real time sync}
@@ -423,36 +413,22 @@ The server sends down four events for the client can handle which are \texttt{st
 
 \subsection*{6.8 The drop UI/UX}
 \addcontentsline{toc}{subsection}{6.8 The drop UX}
-The drop UI has 3 states \texttt{idle}, \texttt{drop-armed} and \texttt{drop-placing}. In idle mode, clicking a reserve piece activates it for a drop on the board legally. In drop-armed mode, clicking a square will drop the piece there if legal. drop-placing mode is activated briefly when a piece si being placed then returns to idle again.
+The drop UI has 3 states \texttt{idle}, \texttt{drop-armed} and \texttt{drop-placing}. In idle mode, clicking a reserve piece activates it for a drop on the board legally. In drop-armed mode, clicking a square will drop the piece there if legal. drop-placing mode is activated briefly when a piece is being placed then returns to idle again.
 
 Phase 2 adds a new feature \texttt{request piece} on the right side. It shows all the boards and their reserves along with the best board to request a piece from based on the eval bar. Selecting a piece from there would remove it form the reserves on that board and add it to yours. I thought this feature was interesting to break the unidirectional loop only for the human who is playing against highly rated stockfish engine. If I had more time I would have liked to work on the logic for this further.
 
-\begin{center}
-\fbox{\begin{minipage}{0.85\textwidth}\centering
-\textit{[Figure 5.5 to be inserted]}
-\par\vspace{0.4em}
-The sibling-board recommendation panel. Ranked list of (board, piece) pairs annotated with the eval delta if the piece is removed from the source board.
-\end{minipage}}
-\end{center}
 \subsection*{6.9 Layout}
 \addcontentsline{toc}{subsection}{6.9 Layout}
 
 For Phase 1, a normal bughouse simple 2 board view is shown in the center along with the FEN notation on the left. The reserves are next to the respective users clock. The user can analyse by using the back and forward arrows to go back in the game (non editable) and see the position.
 
-\begin{center}
-\fbox{\begin{minipage}{0.85\textwidth}\centering
-\textit{[Figure 5. to be inserted]}
-\par\vspace{0.4em}
-Image of back and forward arrows
-\end{minipage}}
-\end{center}
 
 For Phase 2,  the center has the human board with all the other boards shown at the top along with the eval bar. The user can click on any board to select it as the main board to view. The request piece feature is on the right which shows the reserves per board.
 
 Earlier I considered selecting a number on the keyboard to open that board, but I rejected the idea since cross board awareness is the strategic point of this variant. Therefore, hiding the boards would have not have the same effect on the users mentality while playing and even asking for pieces.
 
-\section*{Ethics}
-\addcontentsline{toc}{section}{Ethics}
+\section*{7. Ethics}
+\addcontentsline{toc}{section}{7. Ethics}
 
 This project was reviewed by the School of Computer Science Ethics Committee and approved under reference \textbf{CS15727} as a generic artefact evaluation. The risk category was assessed as minimal.
 
@@ -469,15 +445,15 @@ The system only collects the information needed to play the game. This includes 
 The project follows the University of St Andrews Data Protection and Good Research Conduct guidelines. The ethical approval letter (reference CS15727) is on file with the School.
 
 \newpage
-\section*{7. Testing and verification}
-\addcontentsline{toc}{section}{7. Testing and verification}
+\section*{8. Testing and verification}
+\addcontentsline{toc}{section}{8. Testing and verification}
 
-The tests can be run in the project root using \textbf{npm test}. Full test summary in \texttt{Appendix B}
+The tests can be run in the project root using \textbf{npm test}. Full test summary in \texttt{Appendix B}.
 
-The testing setup (\texttt{tests/test-utils.js}) contains helper functions for testing. Each test file tracks its pass and fail count and gives the result in the end. The \texttt{tests/run-all.js} runs each file as a separate node process, reads the reuslts and if any fail it exits with and error. 
+The testing setup (\texttt{tests/test-utils.js}) contains helper functions for testing. Each test file tracks its pass and fail count and gives the result in the end. The \texttt{tests/run-all.js} runs each file as a separate node process, reads the results and if any fail it exits with an error. 
 
-\subsection*{7.1 Coverage}
-\addcontentsline{toc}{subsection}{7.1 Coverage}
+\subsection*{8.1 Coverage}
+\addcontentsline{toc}{subsection}{8.1 Coverage}
 
 I have added 150 tests in 5 test files.  \texttt{bughouse.test.js} and \texttt{elo.test.js} test the Phase 1 rule and team rating logic. \texttt{dropDecision.test.js},\texttt{engineStrength.test.js} and \texttt{infiniteMode.test.js} test Phase 2 implementation including engine pipeline and N board system. Tests for both the phases were written simultaneously during respective phase.
 
@@ -491,49 +467,35 @@ I have added 150 tests in 5 test files.  \texttt{bughouse.test.js} and \texttt{e
 
 \end{itemize}
 
-\begin{center}
-\fbox{\begin{minipage}{0.85\textwidth}\centering
-\textit{[Figure 6.1 to be inserted]}
-\par\vspace{0.4em}
-\texttt{npm test} output, all five files passing with assertion counts and the runner's summary line.
-\end{minipage}}
-\end{center}
-\subsection*{7.2 What is not tested}
-\addcontentsline{toc}{subsection}{7.2 What is not tested}
-First, I manually tested Chessboard rendering and React connections therefore did not add any frontend tests. Secondly, I was not able to add any load tests. Although, I manually tested 2 simultaneous N=10 games which created 22 Stockfish processes which worked fine. Thirdly, although I dont have tests for socket reconnects. The reconnect system worked well in manual testing, but I did not intentionally break TCP connections during games to test failure behaviour. Given the scope of the project and the time constraint, I thought testing the engine, chess rules and the overall infinte armada superseded these. However, I have manually tested the system and have fixed console errors as well.
+\subsection*{8.2 What is not tested}
+\addcontentsline{toc}{subsection}{8.2 What is not tested}
+First, I manually tested Chessboard rendering and React connections therefore did not add any frontend tests. Secondly, I was not able to add any load tests. Although, I manually tested 2 simultaneous N=10 games which created 22 Stockfish processes which worked fine. Thirdly, although I dont have tests for socket reconnects. The reconnect system worked well in manual testing, but I did not intentionally break TCP connections during games to test failure behaviour. Given the scope of the project and the time constraint, I thought testing the engine, chess rules and the overall infinite armada superseded these. However, I have manually tested the system and have fixed console errors as well.
 
-\subsection*{7.3 Bugs found during testing}
-\addcontentsline{toc}{subsection}{7.3 Bugs found during testing}
+\subsection*{8.3 Bugs found during testing}
+\addcontentsline{toc}{subsection}{8.3 Bugs found during testing}
 
-The following three bugs where identified during the testing of Bug.js. The first bug was in \texttt{infiniteMode.test.js}. In some cases the engine would checkmate the human player but the game would fail to end properly. This issue was caused by the fact that \texttt{checkBoardEnd()} is a function that is called after a successful move. In some of the mate in one cases for the engine’s fallback path the check for a mate in one move would be skipped. Thus the function for checking the end of the board for check would not be called. Fixed it by placing the function \texttt{checkBoardEnd()} at the start of the function \texttt{makeEngineMove()}.
+The following three bugs were identified during the testing of Bug.js. The first bug was in \texttt{infiniteMode.test.js}. In some cases the engine would checkmate the human player but the game would fail to end properly. This issue was caused by the fact that \texttt{checkBoardEnd()} is a function that is called after a successful move. In some of the mate in one cases for the engine’s fallback path the check for a mate in one move would be skipped. Thus the function for checking the end of the board for check would not be called. Fixed it by placing the function \texttt{checkBoardEnd()} at the start of the function \texttt{makeEngineMove()}.
 
 Another issue was found during manual testing of  remove pawn on promotion (pawn gets removed after promoting to queen). Initially setReserves only copied the reserve arrays and not the piece objects within them. This meant after undoing after such a move, the promoted piece would still be there on the board. This was fixed in Phase 2.
 
 The third bug was the Engine vs Engine speed of moves. They were progressing too fast and my reserves where getting filled with pieces even though I would have not traded anything. This was fixed by correctly mapping \texttt{ENGINE\_MIN\_GAP\_MS} with \texttt{lastMoveAt} instead of \texttt{lastTimestamp} so that the delay in moves keeps the speed on both the boards even.
 
 \newpage
-\section*{8. Evaluation}
-\addcontentsline{toc}{section}{8. Evaluation}
-\subsection*{8.1 Engine strength}
-\addcontentsline{toc}{subsection}{8.1 Engine strength sanity}
-As mentioned above in 6.1, I added an engine strength test to set up two Stockfish engines of Elo 1300 and Elo 2500 and for each of them run five test positions (200ms between moves). The test positions are an Italian Opening position, a king and pawn endgame, a position with a developed knight to attack, a position where a centre pawn can be captured and an endgame position with advantage. The 2500 Elo engine finds the best move for 4 out of 5 test positions that had been curated for this test. The 1300 Elo engine finds the best move for all 5 test positions, which is not surprising as the test positions chosen were all very simple and had been chosen for that reason. The purpose of this test is not to do Elo calibration itself (that would require a hundred or so games each for Bughouse and Chess) but to check that the engine starts up, talks UCI correctly and returns sensible moves in simple positions.
+\section*{9. Evaluation}
+\addcontentsline{toc}{section}{9. Evaluation}
+\subsection*{9.1 Engine strength}
+\addcontentsline{toc}{subsection}{9.1 Engine strength sanity}
+As mentioned above in 6.5, I added an engine strength test to set up two Stockfish engines of Elo 1300 and Elo 2500 and for each of them run five test positions (200ms between moves). The test positions are an Italian Opening position, a king and pawn endgame, a position with a developed knight to attack, a position where a centre pawn can be captured and an endgame position with advantage. The 2500 Elo engine finds the best move for 4 out of 5 test positions that had been curated for this test. The 1300 Elo engine finds the best move for all 5 test positions, which is not surprising as the test positions chosen were all very simple and had been chosen for that reason. The purpose of this test is not to do Elo calibration itself (that would require a hundred or so games each for Bughouse and Chess) but to check that the engine starts up, talks UCI correctly and returns sensible moves in simple positions.
 
-\subsection*{8.2 Pacing}
-\addcontentsline{toc}{subsection}{8.2 Pacing}
+\subsection*{9.2 Pacing}
+\addcontentsline{toc}{subsection}{9.2 Pacing}
 I tested the engine speed by not moving on an N=2 game and observing the idle board showing that the engine moves only. I checked the move timings every 100ms over the course of 7 seconds. With a pacing limit of 1500ms the moves are spaced about 1.2 seconds apart which seems to be fast enough to keep the games readable but not so fast that the boards move too quickly.
 
 For an application like chess self play testing was a much more productive approach. For an N=4 game with a 5+5 time control, it was completely possible to follow and understand all the other boards and it felt natural to jump to another board to assess the position and request a piece if necessary. However, at N=10, even though individually each board moved at a reasonable pace, it was not possible to follow all of them in sufficient detail.
 
-\begin{center}
-\fbox{\begin{minipage}{0.85\textwidth}\centering
-\textit{[Figure 7.2 to be inserted]}
-\par\vspace{0.4em}
-Engine move-gap distribution on a sibling board across a 10-minute observation. Buckets: under 1.2s, 1.2 to 2s, 2 to 3s, over 3s. Most of the mass falls in the 1.2 to 2s bucket.
-\end{minipage}}
-\end{center}
-\subsection*{8.3 Playability at N = 4, 6, 10}
-\addcontentsline{toc}{subsection}{8.3 Playability at N = 4, 6, 10}
-I played 10 games on each N, all games 5+5, all engines were set to Elo 1500. For each game, I scored them on a combination of 3 criterias - 
+\subsection*{9.3 Playability at N = 4, 6, 10}
+\addcontentsline{toc}{subsection}{9.3 Playability at N = 4, 6, 10}
+I played 10 games on each N, all games 5+5, all engines were set to Elo 1500. For each game, I scored them on a combination of 3 criteria - 
 \begin{enumerate}
     \item Did the request piece across boards matter  (i.e Did pulling a piece from a sibling board change the outcome on board 0? 
     \item Did the sibling boards remain tactically meaningful or did they drop into complete noise? 
@@ -548,17 +510,17 @@ I played 10 games on each N, all games 5+5, all engines were set to Elo 1500. Fo
 
 The variant is best played at N=4 to N=6. N=10 is also perfectly fine from a technical standpoint (no crashes, no deadlocks, correct pacing). But the strategic cross board loop gets severely weakened. In most of the games at N=10, it takes too long for pieces to propagate from board 4 where they were moved to my pocket on that board. In most of the games I won or lost on board 0 without ever having pulled a piece from a sibling board. This result taught me that the interesting strategic playing happens in the middle, not at the edges. I would like to work on the cross board loop so that engines can also ask for a piece and save a weak position.
 
-\subsection*{8.4 Compared to bughouse and to parallel chess}
-\addcontentsline{toc}{subsection}{8.4 Compared to bughouse and to parallel chess}
+\subsection*{9.4 Compared to bughouse and to parallel chess}
+\addcontentsline{toc}{subsection}{9.4 Compared to bughouse and to parallel chess}
 
-Compared to bughouse, my multiplayer (basic mode) and N=2 (Infinte Armada) version are similar, but the piece transfer strategy is different. In bughouse, my partner can hold onto a piece and wait until I require it, this stops the flow of pieces and can sometimes become overwhelming if my opponent gets 6 pocket pieces in one go. In my variant,  I fixed this by automatically transferring pieces to the partner both in the multiplayer and Infinite Armada. 
+Compared to bughouse, my multiplayer (basic mode) and N=2 (Infinite Armada) version are similar, but the piece transfer strategy is different. In bughouse, my partner can hold onto a piece and wait until I require it, this stops the flow of pieces and can sometimes become overwhelming if my opponent gets 6 pocket pieces in one go. In my variant,  I fixed this by automatically transferring pieces to the partner both in the multiplayer and Infinite Armada. 
 
 Compared to parallel chess, where multiple normal chess games run in parallel without any piece transfer. To test this, I added a patch to disable flow state and tested it with two N=4 games. The experience was like tournament style chess where each game is independent without any piece flow but counts towards the overall team score. In this format you usually focus on your own board and rarely look at the other boards just to get an update. This is not an engaging enough experience for my variant. But it gave me a great idea, in the future I would like to expand the software to have a tournament mode as well where people and engines can compete over a week. This would although require a pairing software as well to update the ratings and match each player for the next round based on official FIDE rules.
 
 One of the N=4 game that I played was quite interesting, I was down a pawn on board 0 and in a weak position. My teammate (engine) on board 2 traded rooks, which landed in board 3 pocket. The system recommended  me that it was the best piece to request, since board 3 was losing (eval bar dropped) and board 1 was winning. I got the rook, placed it on my board and exchanged material to gain advantage and won. Overall, this game was a great testing experience and see all the board interact with each other.
 
-\subsection*{8.5 Phase 1 playability and analysis}
-\addcontentsline{toc}{subsection}{8.5 Phase 1 playability and analysis}
+\subsection*{9.5 Phase 1 playability and analysis}
+\addcontentsline{toc}{subsection}{9.5 Phase 1 playability and analysis}
 
 To test this, I ran 6 sessions of 4 player (3 sessions at 5+5 and 3 sessions at 3+2). Two of the players were serious players and the other four were casual players.
 
@@ -581,8 +543,8 @@ Phase 1 work could be enhanced by having more time to implement three specific f
     \item Different personalities for the two engines on a team where each engine could play a very different style and/or possess significantly different strengths.
 \end{itemize}
 
-\subsection*{8.6 Comparing Phase 1 and Phase 2}
-\addcontentsline{toc}{subsection}{8.6 Comparing Phase 1 and Phase 2}
+\subsection*{9.6 Comparing Phase 1 and Phase 2}
+\addcontentsline{toc}{subsection}{9.6 Comparing Phase 1 and Phase 2}
 
 Phase 1 and Phase 2 are two completely different games.
 
@@ -590,20 +552,20 @@ One plays more social in Phase 1 than in Phase 2, since four players play togeth
 
 As mentioned in my Interim Demo, Phase 2 is independent enough that it could be a standalone variant of chess. In Phase 2 a single human player competes against a loop of chess engines. Pieces are transferred to the player’s board in one direction only, which I think creates a rather unique style of play. Because each board ends separately the games are also shorter on average, about 16 minutes as compared to about 19 minutes in Phase 1 at 5+5.
 
-\subsection*{8.7 Limitations}
-\addcontentsline{toc}{subsection}{8.7 Limitations}
+\subsection*{9.7 Limitations}
+\addcontentsline{toc}{subsection}{9.7 Limitations}
 
 \begin{enumerate}[leftmargin=*]
 
-\item \textit{Cross-board recommendation accuracy.} While recommending strong pieces from sibling boards, the system currently is not accurate enough to account for how badly that piece weakens the remaining position on that board. A deeper multi move evaluation would help to improve this, but the cost of such evaluation increases too much for higher N values ( e.g N=10).
+\item \textit{Cross-board recommendation accuracy.} While recommending strong pieces from sibling boards, the system currently is not accurate enough to account for how badly that piece weakens the remaining position on that board. A deeper multi move evaluation would help to improve this, but the cost of such evaluation increases too much for higher N values (e.g. N=10).
 
 \item \textit{N=10 UI cramped.} The mini boards for N=10 are too small to easily read out moves and follow the resulting tactics on each board. Three other players reported this issue during testing. I added a scrollable option but the boards UI still needs to be improved.
 
 \item \textit{High Elo engine quality deteriorates.} The high Elo Stockfish is not good enough to mimic real players with high Elo ratings. A Elo 1700+ rated engine will sometimes make obvious mistakes, but then find very strong tactical moves. This happens due to continuous change of pieces in the players reserves which continuously changes the evaluation that the engine had thought before making the previous move. Restricting the engine settings or building a proper weak engine, would be better but is out of the scope of this project.
 
 \end{enumerate}
-\subsection*{8.8 Future work}
-\addcontentsline{toc}{subsection}{8.8 Future work}
+\subsection*{9.8 Future work}
+\addcontentsline{toc}{subsection}{9.8 Future work}
 \begin{itemize}
 
 \item \textit{Better partner need logic in Phase 2.} The two functions \texttt{computePartnerNeed} and \texttt{computeOpponentPartnerDanger} (of his partner) already work fine in Phase 1, but aren’t fully connected in Phase 2. They should work fine after that as well, just need some tuning of the \texttt{LAMBDA} and \texttt{MU} values for the N boards.
@@ -614,26 +576,26 @@ As mentioned in my Interim Demo, Phase 2 is independent enough that it could be 
 
 \end{itemize}
 
-\subsection*{8.9 Why Phase 2 is not rated}
-\addcontentsline{toc}{subsection}{8.9 Why Phase 2 is not rated}
-Infinite mode (Phase 2) does not have a rating system yet. Elo and Glicko ratings are designed with fair one vs one games in mind. The rating system of Infinite mode games is very asymmetric (one human playing against arbitary engines).
-eg. An event on one board might have changes on the game as a whole, but this does not directly translate into a win or loss for the human on that board. In addition the difficulty of Infinite mode games increases with N. Thus winning an Infinite mode game at N=10 is not the same as winning a game at N=4.
+\subsection*{9.9 Why Phase 2 is not rated}
+\addcontentsline{toc}{subsection}{9.9 Why Phase 2 is not rated}
+Infinite mode (Phase 2) does not have a rating system yet. Elo and Glicko ratings are designed with fair one vs one games in mind. The rating system of Infinite mode games is very asymmetric (one human playing against arbitrary engines).
+e.g. An event on one board might have changes on the game as a whole, but this does not directly translate into a win or loss for the human on that board. In addition the difficulty of Infinite mode games increases with N. Thus winning an Infinite mode game at N=10 is not the same as winning a game at N=4.
 
 There are a few ways a rating system for this could be implemented.
 \begin{enumerate}
-    \item Rate by engine Elo and N, so a player has a separate rating per configuration
-\item Rate by average eval accuracy, engine Elo, N and the time the user lasted. I think this would give an accurate rating.
-\item  Rate based on human's board outcome and not by siblings
-
-The optimal way would require a lot of long term data that does not currently exist.
+    \item Rate by engine Elo and N, so a player has a separate rating per configuration.
+    \item Rate by average eval accuracy, engine Elo, N and the time the user lasted. I think this would give an accurate rating.
+    \item Rate based on human's board outcome and not by siblings.
 \end{enumerate}
 
+The optimal way would require a lot of long term data that does not currently exist.
+
 \newpage
-\section*{9. Conclusion}
-\addcontentsline{toc}{section}{9. Conclusion}
+\section*{10. Conclusion}
+\addcontentsline{toc}{section}{10. Conclusion}
 I created Infinite Armada Chess in two stages. First, I created a four player bughouse game in which I wrote a server side rule enforcement layer, optionally filled out moves with Stockfish, correctly handled draws and resignations on a team basis and implemented a custom team Elo rating. Then, I extended this to an N board loop (Phase 2) where one human plays against N-1 Stockfish engines, with pieces going in one direction around the ring of boards.
 
-The main contribution of this chess variant is the additional layer of complexity on top of normal chess namely a strict set of rules, an N board manager (currently upto N=10), a drop decision pipeline and a cross board recommendation algorithm.
+The main contribution of this chess variant is the additional layer of complexity on top of normal chess namely a strict set of rules, an N board manager (currently up to N=10), a drop decision pipeline and a cross board recommendation algorithm.
 
 This system has been tested using 150 assertion tests as well as engine strength tests and pacing tests.
 
@@ -698,20 +660,20 @@ I was glad to come up with a version for "Infinite" myself, based on that XKCD c
 \section*{Appendix A: Running the system}
 \addcontentsline{toc}{section}{Appendix A: Running the system}
 
-\textbf{GitHub Repo:} \texttt{https://github.com/devansh2605/CSCS5199-Individual-Masters-Project.git}
-\textbf{Deployed for Multiplayer:} \texttt{https://infinite-chess-armada.vercel.app/}
+\noindent\textbf{GitHub Repo:} \texttt{https://github.com/devansh2605/CS5199-Individual-Masters-Project.git} \\
+\textbf{Deployed for Multiplayer:} \texttt{https://infinite-chess-armada.vercel.app/} \\
 \textbf{Diagrams:} \texttt{https://canva.link/t92g7xdswyar977}
 
-If you want to try out the system you check the vercel deployed version or create a clone of this repo. To run the system locally it is one command \texttt{./run.sh}. This script checks whether it runs on Linux or macOS and then installs Node 20 and Stockfish locally. The script copies .env.example to .env, runs npm install, builds the webpack-bundle and starts the server. Start the app in your browser at http://localhost:1000. The.
+If you want to try out the system you can check the vercel deployed version or create a clone of this repo. To run the system locally it is one command \texttt{./run.sh}. This script checks whether it runs on Linux or macOS and then installs Node 20 and Stockfish locally. The script copies .env.example to .env, runs npm install, builds the webpack-bundle and starts the server. Start the app in your browser at http://localhost:1000.
 
 The test suite runs with \texttt{npm test} and skips Stockfish-dependent tests cleanly if not on the path.
 
-I have also added a \texttt{README.md} for you perusal.
+I have also added a \texttt{README.md} for your perusal.
 
 \newpage
 \section*{Appendix B: Testing summary}
 \addcontentsline{toc}{section}{Appendix B: Testing summary}
- Section 7 described the testing methodology for this suite, as well as file by file coverage. To run the full test suite, execute \texttt{npm test}. Below is the test suite output from a complete run I performed.
+ Section 8 described the testing methodology for this suite, as well as file by file coverage. To run the full test suite, execute \texttt{npm test}. Below is the test suite output from a complete run I performed.
 
 \begin{verbatim}
                TESTING RESULTS
@@ -724,7 +686,7 @@ I have also added a \texttt{README.md} for you perusal.
   TOTAL                   150 pass,  0 fail,  0 skip
 \end{verbatim}
 
-The three regression bugs that the tests caught during development and their fixes are described in Section 7.3. The manual testing is described in Section 7.2.
+The three regression bugs that the tests caught during development and their fixes are described in Section 8.3. The manual testing is described in Section 8.2.
 
 \newpage
 \section*{Appendix C: Interface Screenshots}
@@ -744,7 +706,7 @@ The three regression bugs that the tests caught during development and their fix
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{phase1.png}
-    \caption{Phase 1 - 2 vs 2}
+    \caption{Phase 1 in-game view}
 \end{figure}
 \begin{figure}[H]
     \centering
@@ -760,7 +722,7 @@ The three regression bugs that the tests caught during development and their fix
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\linewidth]{phase2-lobby.png}
+    \includegraphics[width=0.5\linewidth]{phase2-lobby.png}
     \caption{Phase 2 - Lobby}
     
 \end{figure}
