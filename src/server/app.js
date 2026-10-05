@@ -8,11 +8,24 @@ const config = require('./config');
 
 const app = express();
 
-app.use(cors({
-	origin: config.corsOrigin,
+// CORS options for Express (used for HTTP requests and socket.io polling)
+const corsOptions = {
+	origin: (origin, callback) => {
+		// Allow requests with no origin (like mobile apps, Curl, etc.)
+		if (!origin) return callback(null, true);
+		// Check if origin is allowed
+		const isAllowed = config.isAllowedOrigin(origin);
+		if (isAllowed) {
+			callback(null, true);
+		} else {
+			callback(new Error('CORS not allowed'));
+		}
+	},
 	credentials: true,
 	methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-}));
+};
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

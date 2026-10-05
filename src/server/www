@@ -18,14 +18,25 @@ app.set('port', port);
 
 const server = http.createServer(app);
 
-const io = require('socket.io')(server, {
-	cors: {
-		origin: config.isAllowedOrigin,
-		methods: ['GET', 'POST', 'OPTIONS'],
-		credentials: true,
-		allowEIO3: true,
+const corsOptions = {
+	origin: (origin, callback) => {
+		// Allow requests with no origin (like mobile apps, Curl, etc.)
+		if (!origin) return callback(null, true);
+		// Check if origin is allowed
+		const isAllowed = config.isAllowedOrigin(origin);
+		if (isAllowed) {
+			callback(null, true);
+		} else {
+			callback(new Error('CORS not allowed'));
+		}
 	},
+	credentials: true,
+};
+
+const io = require('socket.io')(server, {
+	cors: corsOptions,
 	maxHttpBufferSize: 1e6,
+	transports: ['websocket', 'polling'],
 });
 
 io.setMaxListeners(100);
